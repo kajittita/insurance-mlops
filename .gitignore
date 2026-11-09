@@ -18,6 +18,8 @@ coverage.xml
 /models/
 /logs/
 mlruns/
+mlflow.db
+mlartifacts/
 
 # Editor / OS
 .vscode/

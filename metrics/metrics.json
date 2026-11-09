@@ -1,0 +1,7 @@
+{
+  "best_model": "gradient_boosting",
+  "rmse": 4209.822202788991,
+  "champion_rmse": 4209.822202788991,
+  "promoted": false,
+  "model_version": null
+}
