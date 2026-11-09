@@ -1,0 +1,22 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      - id: flake8
+        name: flake8 (PEP8)
+        entry: flake8
+        language: system
+        types: [python]
+      - id: pyright
+        name: pyright (type check)
+        entry: pyright
+        language: system
+        types: [python]
+        pass_filenames: false
