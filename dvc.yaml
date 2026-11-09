@@ -1,0 +1,9 @@
+stages:
+  prepare:
+    cmd: python -m insurance.prepare
+    deps:
+      - data/raw/insurance.csv
+      - src/insurance/prepare.py
+      - src/insurance/config.py
+    outs:
+      - data/processed/insurance_clean.csv
