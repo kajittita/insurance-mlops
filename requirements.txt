@@ -1,0 +1,11 @@
+pandas==3.1.1
+numpy==2.5.4
+scikit-learn==1.9.1
+mlflow==3.18.0
+evidently==0.7.23
+fastapi==0.162.2
+uvicorn==0.54.0
+streamlit==1.67.0
+pydantic==2.14.3
+pydantic-settings==2.16.2
+pyyaml==6.0.3

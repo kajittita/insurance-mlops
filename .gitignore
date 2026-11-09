@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Tesztek, coverage
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Titkos beállítások
+.env
+
+# Generált fájlok (ezeket a pipeline állítja elő)
+/data/processed/
+/models/
+/logs/
+mlruns/
+
+# Editor / OS
+.vscode/
+.DS_Store
+Thumbs.db
