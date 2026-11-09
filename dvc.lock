@@ -9,8 +9,8 @@ stages:
       size: 55628
     - path: src/insurance/config.py
       hash: md5
-      md5: a3e7aa66c51159a26bd59e75e95800f4
-      size: 392
+      md5: ff8e00dbcac18e939dd5f7e57372e702
+      size: 698
     - path: src/insurance/prepare.py
       hash: md5
       md5: 1f6ce9ced69b0b97e72bc335c74c1473
@@ -20,3 +20,23 @@ stages:
       hash: md5
       md5: 92e141f4a2f862adce2eff92be9de054
       size: 55650
+  train:
+    cmd: python -m insurance.train
+    deps:
+    - path: data/processed/insurance_clean.csv
+      hash: md5
+      md5: 92e141f4a2f862adce2eff92be9de054
+      size: 55650
+    - path: src/insurance/config.py
+      hash: md5
+      md5: ff8e00dbcac18e939dd5f7e57372e702
+      size: 698
+    - path: src/insurance/train.py
+      hash: md5
+      md5: effc96d1dd11221b9901b631f8d915f3
+      size: 6089
+    outs:
+    - path: metrics/metrics.json
+      hash: md5
+      md5: e5fe3b60842bbc8c22096fdd1683519c
+      size: 160

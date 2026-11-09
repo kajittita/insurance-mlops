@@ -7,3 +7,13 @@ stages:
       - src/insurance/config.py
     outs:
       - data/processed/insurance_clean.csv
+
+  train:
+    cmd: python -m insurance.train
+    deps:
+      - data/processed/insurance_clean.csv
+      - src/insurance/train.py
+      - src/insurance/config.py
+    metrics:
+      - metrics/metrics.json:
+          cache: false
