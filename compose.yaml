@@ -1,0 +1,60 @@
+# Start everything with: docker compose up --build
+#   MLflow dashboard: http://localhost:5000
+#   API (Swagger):    http://localhost:8000/docs
+
+services:
+  mlflow:
+    build: .
+    image: insurance-mlops:latest
+    command: >
+      mlflow server --host 0.0.0.0 --port 5000 --workers 1
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --artifacts-destination /mlflow/artifacts
+      --allowed-hosts mlflow:5000,localhost:5000,127.0.0.1:5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow-data:/mlflow
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  # Runs one training when the system starts, so /predict works right away. Then it exits.
+  trainer:
+    image: insurance-mlops:latest
+    pull_policy: never  # built locally by the mlflow service above
+    command: python -m insurance.train
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    volumes:
+      - ./data:/app/data:ro
+    depends_on:
+      mlflow:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    image: insurance-mlops:latest
+    pull_policy: never  # built locally by the mlflow service above
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data:ro
+      - prediction-logs:/app/logs
+    depends_on:
+      mlflow:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mlflow-data:
+  prediction-logs:
