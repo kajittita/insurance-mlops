@@ -3,7 +3,6 @@ import runpy
 import sys
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import pytest
 from sklearn.dummy import DummyRegressor
@@ -11,31 +10,6 @@ from sklearn.linear_model import LinearRegression
 
 import insurance.train as train_module
 from insurance.train import TrainResult, build_pipeline, evaluate, split_features_target, train
-
-
-@pytest.fixture
-def data_csv(tmp_path: Path) -> Path:
-    """A small synthetic dataset with the same columns as the real one."""
-    rng = np.random.default_rng(0)
-    n = 100
-    df = pd.DataFrame({
-        "age": rng.integers(18, 65, n),
-        "bmi": rng.uniform(18, 40, n).round(1),
-        "children": rng.integers(0, 4, n),
-        "sex": rng.choice(["female", "male"], n),
-        "smoker": rng.choice(["yes", "no"], n),
-        "region": rng.choice(["northeast", "northwest", "southeast", "southwest"], n),
-    })
-    df["charges"] = 250 * df["age"] + 20000 * (df["smoker"] == "yes") + rng.normal(0, 500, n)
-    path = tmp_path / "data" / "processed" / "insurance_clean.csv"
-    path.parent.mkdir(parents=True)
-    df.to_csv(path, index=False)
-    return path
-
-
-@pytest.fixture
-def tracking_uri(tmp_path: Path) -> str:
-    return f"sqlite:///{tmp_path / 'mlflow.db'}"
 
 
 def test_pipeline_learns_and_evaluates(data_csv: Path) -> None:
