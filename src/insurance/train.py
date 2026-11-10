@@ -107,7 +107,7 @@ def train(data_path: Path = PROCESSED_DATA_PATH, tracking_uri: str = MLFLOW_TRAC
 
     df = pd.read_csv(data_path)
     test_df = df.sample(frac=TEST_SIZE, random_state=RANDOM_STATE)
-    train_df = df.drop(index=test_df.index)
+    train_df = df.drop(index=test_df.index.tolist())
     x_train, y_train = split_features_target(train_df)
     x_test, y_test = split_features_target(test_df)
 
