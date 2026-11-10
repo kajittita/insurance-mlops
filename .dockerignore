@@ -1,0 +1,16 @@
+# Keep the build context small and free of secrets and local state.
+.git
+.venv
+.dvc
+.env
+data
+docs
+logs
+metrics
+mlruns
+mlflow.db
+tests
+**/__pycache__
+**/*.egg-info
+.pytest_cache
+.coverage
