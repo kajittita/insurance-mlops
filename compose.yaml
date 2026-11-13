@@ -1,6 +1,7 @@
 # Start everything with: docker compose up --build
 #   MLflow dashboard: http://localhost:5000
 #   API (Swagger):    http://localhost:8000/docs
+#   Monitoring:       http://localhost:8501
 
 services:
   mlflow:
@@ -51,6 +52,27 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  streamlit:
+    image: insurance-mlops:latest
+    pull_policy: never  # built locally by the mlflow service above
+    command: >
+      streamlit run dashboard/app.py
+      --server.port 8501 --server.address 0.0.0.0
+      --server.headless true --browser.gatherUsageStats false
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data:ro
+      - prediction-logs:/app/logs:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')"]
       interval: 10s
       timeout: 5s
       retries: 10
