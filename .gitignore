@@ -17,6 +17,7 @@ coverage.xml
 /data/processed/
 /models/
 /logs/
+/reports/
 mlruns/
 mlflow.db
 mlartifacts/
