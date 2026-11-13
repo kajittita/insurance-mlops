@@ -38,8 +38,8 @@ def sent_bodies(monkeypatch: pytest.MonkeyPatch) -> list[dict[str, object]]:
 
 
 def test_shift_makes_people_older_and_heavier(data_csv: Path) -> None:
-    normal = pd.DataFrame(sample_requests(data_csv, 30, shift=False))
-    shifted = pd.DataFrame(sample_requests(data_csv, 30, shift=True))
+    normal = pd.DataFrame(sample_requests(data_csv, 30, shift=False, seed=0))
+    shifted = pd.DataFrame(sample_requests(data_csv, 30, shift=True, seed=0))
     assert len(normal) == 30
     assert (shifted["age"] >= normal["age"]).all()
     assert shifted["bmi"].mean() > normal["bmi"].mean()
@@ -64,3 +64,7 @@ def test_module_runs_as_script(
     runpy.run_module("insurance.simulate", run_name="__main__")
     assert len(sent_bodies) == 2
     assert simulate_module.DEFAULT_API_URL.startswith("http")
+
+
+def test_runs_without_seed_draw_different_samples(data_csv: Path) -> None:
+    assert sample_requests(data_csv, 20, shift=False) != sample_requests(data_csv, 20, shift=False)

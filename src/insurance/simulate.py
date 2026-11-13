@@ -19,8 +19,11 @@ logger = logging.getLogger(__name__)
 DEFAULT_API_URL = "http://localhost:8000"
 
 
-def sample_requests(data_path: Path, n: int, shift: bool, seed: int = 0) -> list[dict[str, object]]:
-    """Pick n random people from the dataset. With shift=True they are made older and heavier."""
+def sample_requests(data_path: Path, n: int, shift: bool, seed: int | None = None) -> list[dict[str, object]]:
+    """Pick n random people from the dataset. With shift=True they are made older and heavier.
+
+    Without a seed every run draws a new sample, so repeated runs do not send the same people again.
+    """
     sample = pd.read_csv(data_path).loc[:, FEATURES].sample(n=n, replace=True, random_state=seed)
     if shift:
         sample["age"] = (sample["age"] + 15).clip(upper=100)
@@ -50,9 +53,10 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--n", type=int, default=50, help="number of requests")
     parser.add_argument("--shift", action="store_true", help="make the data drift on purpose")
     parser.add_argument("--url", default=DEFAULT_API_URL, help="base URL of the API")
+    parser.add_argument("--seed", type=int, default=None, help="fix the random sample (for repeatable runs)")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    sent = send_requests(sample_requests(PROCESSED_DATA_PATH, args.n, args.shift), args.url)
+    sent = send_requests(sample_requests(PROCESSED_DATA_PATH, args.n, args.shift, args.seed), args.url)
     logger.info("Sent %d requests to %s (shift=%s)", sent, args.url, args.shift)
 
 
