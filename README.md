@@ -148,3 +148,27 @@ pre-commit install
   kategóriáknál khi-négyzet próbával (legalább 20 kérés kell).
 - A Streamlit dashboard csak megjelenít: a számokat, a teljes Evidently riportot és az utolsó jóslatokat.
 - Kipróbálva: normál forgalomnál 0–1 oszlop jelez driftet, `--shift`-tel az `age` és a `bmi` egyértelműen.
+
+## Minőség, automatizálás és Git
+
+| Szabály (kiírás) | Megoldás | Eredmény |
+|---|---|---|
+| Tesztek, coverage min. 95% (`src` + `tests`) | pytest + pytest-cov, a `pyproject.toml`-ban `--cov-fail-under=95` | **100%** |
+| PEP8, max. 1% hiba, line-length 120 | flake8 (`.flake8`) | **0 hiba**, `noqa` nincs |
+| Pyright standard, `src/` | pyright | **0 hiba** |
+| Extra: Pyright „szelíd strict” | a kiírás konfigurációja a `pyproject.toml`-ban | **0 hiba** |
+| Pontos verziók | a `requirements*.txt`-ben minden csomag (a közvetettek is) `==`-vel | |
+| `# pragma: no cover`, `omit` | nincs használva | |
+
+**pre-commit** (`.pre-commit-config.yaml`): minden `git commit` előtt lefut a flake8, a pyright és néhány
+fájlellenőrzés; hibánál a commit nem jön létre.
+
+**GitHub Actions** (`.github/workflows/ci.yml`), minden pushra és pull requestre:
+1. *Lint, type check, tests and coverage* – a pre-commit hookok és a tesztek a 95%-os küszöbbel (a coverage riport letölthető artifact);
+2. *Build the Docker image* – felépíti az image-et és kipróbálja (csak sikeres tesztek után fut).
+
+**Git munkafolyamat:**
+- minden funkció külön **feature branchen** készült, **pull requesttel** és **merge committal** került a `main`-re
+  (a branchek megmaradtak);
+- a `main`-t egy GitHub ruleset védi: csak PR-rel módosítható, és csak zöld CI mellett mergelhető;
+- a commitok formátuma: `feat:`, `fix:`, `test:`, `docs:`, `build:`, `ci:`, `chore:`, `style:`, `refactor:`.
