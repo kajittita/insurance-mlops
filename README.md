@@ -1,4 +1,4 @@
-# Insurance charges – MLOps projekt
+# Insurance charges – MLSecOps projekt
 
 Féléves beadandó az **MLSecOps** tárgyhoz.
 Egy egészségbiztosítási adathalmazon (életkor, nem, BMI, gyerekek száma, dohányzás, régió) gépi tanulási modell
@@ -190,3 +190,38 @@ Minden kép a [`docs/screenshots`](docs/screenshots) mappában van.
 | GitHub Actions – zöld futás | [github_actions.png](docs/screenshots/github_actions.png) |
 
 ![Streamlit dashboard](docs/screenshots/streamlit_dashboard.png)
+
+## Döntések és indoklások
+
+- **DVC tárhely: helyi mappa MinIO helyett.** A laboron használt MinIO 2026 szeptemberében megszüntette a nyilvános
+  Docker image-eit; nem hivatalos másolatot ellátási lánc (supply chain) kockázat miatt nem használtam. A DVC remote
+  ezért egy helyi mappa (`../dvc-storage`). Következmény: más gépen a `dvc pull` nem működik, az adatfájl a beadott ZIP-ben van.
+- **pandas 2.3.3** a legújabb 3.x helyett, mert az Evidently 0.7 nem kompatibilis a pandas 3-mal.
+- **Teljesen rögzített függőségek:** a csak a fő csomagokat rögzítő listával a Docker build 20+ percig tartott
+  (a pip a verziókat próbálgatta); a minden csomagot rögzítő listával kb. 2 perc.
+- **MLflow `--allowed-hosts`:** az MLflow szerver csak ismert gépnevekről fogad kérést (DNS rebinding elleni védelem).
+- **Biztonság röviden:** nem root felhasználó a konténerben, `.dockerignore` (nem kerül az image-be `.env`, `.git`,
+  helyi adat), Pydantic bemenet-ellenőrzés, skops modellmentés pickle helyett, titkok nincsenek a repóban.
+
+## Ismert korlátok
+
+- A forgalomszimulátor korábban minden futáskor ugyanazt a mintát küldte, ezért a `children` oszlop tévesen
+  sodródónak tűnt – javítva (`fix: draw a new random sample on every simulator run`).
+
+## AI-használat
+
+A projekt során **Claude (Anthropic)** AI-asszisztenst használtam.
+
+**Mire:**
+- a projekt felépítésének és a lépések sorrendjének megtervezése;
+- a kód, a tesztek és a konfigurációs fájlok (pyproject.toml, pre-commit, DVC, Docker, GitHub Actions) elkészítésében való segítség, ellenőrzés;
+- az új eszközök (Git, GitHub, DVC, Docker, MLflow, Evidently) használatának megértése;
+- hibaüzenetek értelmezése és javítása (pl. elbukó pre-commit hookok, lassú Docker build, Pylance-jelzések);
+- egymással kompatibilis, rögzített csomagverziók kiválasztása.
+
+**Hogyan:**
+- a lépéseket egyenként futtattam és ellenőriztem (tesztek, flake8, pyright, `dvc repro`, a futó rendszer),
+  és csak ezután commitoltam;
+- ahol több megoldás volt, én döntöttem – pl. helyi DVC tárhely a már nem elérhető MinIO helyett,
+  publikus repository a branch-védelem miatt, a feladatok feature branchekre bontása;
+- a futtatás és az ellenőrzés során előjött hibákat külön `fix:` commitokban javítottam.
