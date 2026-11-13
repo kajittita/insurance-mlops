@@ -172,3 +172,21 @@ fájlellenőrzés; hibánál a commit nem jön létre.
   (a branchek megmaradtak);
 - a `main`-t egy GitHub ruleset védi: csak PR-rel módosítható, és csak zöld CI mellett mergelhető;
 - a commitok formátuma: `feat:`, `fix:`, `test:`, `docs:`, `build:`, `ci:`, `chore:`, `style:`, `refactor:`.
+
+## Screenshotok
+
+Minden kép a [`docs/screenshots`](docs/screenshots) mappában van.
+
+| Téma | Kép |
+|---|---|
+| REST API – sikeres jóslás (Swagger) | [swagger_test.png](docs/screenshots/swagger_test.png) |
+| REST API – hibás bemenet, 422 | [swagger_test_error.png](docs/screenshots/swagger_test_error.png) |
+| REST API – tanítás | [swagger_train.png](docs/screenshots/swagger_train.png) |
+| MLflow – kísérletek | [mlflow_experiments.png](docs/screenshots/mlflow_experiments.png) |
+| MLflow – model registry (`@champion`) | [mlflow_model_registry.png](docs/screenshots/mlflow_model_registry.png) |
+| MLflow – jóslás artifactja | [mlflow_prediction_artifact.png](docs/screenshots/mlflow_prediction_artifact.png) |
+| Docker – futó szolgáltatások | [docker_compose_ps.png](docs/screenshots/docker_compose_ps.png), [docker_desktop.png](docs/screenshots/docker_desktop.png) |
+| Streamlit dashboard + Evidently | [streamlit_dashboard.png](docs/screenshots/streamlit_dashboard.png), [streamlit_evidently_report.png](docs/screenshots/streamlit_evidently_report.png) |
+| GitHub Actions – zöld futás | [github_actions.png](docs/screenshots/github_actions.png) |
+
+![Streamlit dashboard](docs/screenshots/streamlit_dashboard.png)
