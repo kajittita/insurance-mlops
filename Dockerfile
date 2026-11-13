@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY pyproject.toml .
 COPY src ./src
 RUN pip install --no-cache-dir --no-deps .
+COPY dashboard ./dashboard
 
 # Do not run as root: create a normal user that owns the app and the MLflow data folder.
 RUN useradd --create-home appuser \
