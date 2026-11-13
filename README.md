@@ -1,4 +1,4 @@
-# Insurance charges – MLOps projekt
+# Insurance charges – MLSecOps projekt
 
 Féléves beadandó az **MLSecOps** tárgyhoz.
 Egy egészségbiztosítási adathalmazon (életkor, nem, BMI, gyerekek száma, dohányzás, régió) gépi tanulási modell
